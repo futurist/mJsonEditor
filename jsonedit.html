@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset=utf-8>
+<title>JSON Editor</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<script type="text/javascript" src="http://cdn.bootcss.com/mithril/0.2.0/mithril.js"></script>
+<script type="text/javascript" src="mJsonEditor.js"></script>
+
+<style type="text/css">
+html,body{
+	height: 100%;
+}
+#container{
+	height: 100%;
+}
+ul,li{
+    list-style: none
+}
+.canvas{
+	position: relative;
+}
+.canvas div.layer{
+	position: absolute;
+}
+</style>
+</head>
+<body>
+
+<div id="container"></div>
+
+    <script>
+
+var testSchema ={
+  "title": "Person",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "First and Last name",
+      "minLength": 4,
+      "default": "Jeremy Dorn"
+    },
+    "age": {
+      "type": "integer",
+      "default": 25,
+      "minimum": 18,
+      "maximum": 99
+    },
+    "favorite_color": {
+      "type": "string",
+      "format": "color",
+      "title": "favorite color",
+      "default": "#ffa500"
+    },
+    "gender": {
+      "type": "string",
+      "enum": [
+        "male",
+        "female"
+      ]
+    },
+    "location": {
+      "type": "object",
+      "title": "Location",
+      "properties": {
+        "city": {
+          "type": "string",
+          "default": "San Francisco"
+        },
+        "state": {
+          "type": "string",
+          "default": "CA"
+        },
+        "citystate": {
+          "type": "string",
+          "description": "This is generated automatically from the previous two fields",
+          "template": "{{city}}, {{state}}",
+          "watch": {
+            "city": "location.city",
+            "state": "location.state"
+          }
+        }
+      }
+    },
+    "pets": {
+      "type": "array",
+      "format": "table",
+      "title": "Pets",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "title": "Pet",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "cat",
+              "dog",
+              "bird",
+              "reptile",
+              "other"
+            ],
+            "default": "bird"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "default": [
+        {
+          "type": "dog",
+          "name": "234Walter"
+        },
+        {
+          "type": "bird",
+          "name": "W776alter"
+        }
+      ]
+    }
+  }
+}
+
+var testDATA = {
+  "age": 43,
+  "favorite_color": "#ffa500",
+  "location": {
+    "state": "LA",
+    "citystate": "San Francisco, CA"
+  },
+      "pets": [
+        {
+          "type": "dog",
+          "name": "345234"
+        },
+      ]
+
+}
+
+m.render( document.body, new JsonEditor( testSchema, testDATA, +new Date() ) )
+
+</script>
+
+
+</body>
+</html>
+
