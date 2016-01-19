@@ -1,0 +1,23 @@
+{
+  "name": "m_jsoneditor",
+  "version": "1.0.0",
+  "description": "edit json with schema",
+  "main": "mJsonEditor.js",
+  "scripts": {
+    "make": "browserify mJsonEditor.js -s mJsonEditor -o dist/mJsonEditor.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mithriljs-cn/mJsonEditor.git"
+  },
+  "author": "mithriljs_cn <mithriljs.cn@gmail.com> (http://mithriljs.cn)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mithriljs-cn/mJsonEditor/issues"
+  },
+  "homepage": "https://github.com/mithriljs-cn/mJsonEditor#readme",
+  "dependencies": {
+    "mithril": "^0.2.0"
+  }
+}

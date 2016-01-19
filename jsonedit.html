@@ -6,23 +6,48 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <script type="text/javascript" src="http://cdn.bootcss.com/mithril/0.2.0/mithril.js"></script>
-<script type="text/javascript" src="mJsonEditor.js"></script>
+<script type="text/javascript" src="dist/mJsonEditor.js"></script>
 
 <style type="text/css">
 html,body{
-	height: 100%;
+  height: 100%;
 }
 #container{
-	height: 100%;
+  height: 100%;
 }
 ul,li{
     list-style: none
 }
+.left textarea
+{
+    height: 100%;
+    margin: 30px;
+    width: 90%;
+}
+.left
+{
+  position: absolute;
+  top:0;
+  left:0;
+  width:50%;
+  height: 90%;
+}
+.right
+{
+  position: absolute;
+  top:0;
+  left:50%;
+  width:50%;
+  height: 90%;
+}
+.title{
+  margin: 30px 0 0 30px;
+}
 .canvas{
-	position: relative;
+  position: relative;
 }
 .canvas div.layer{
-	position: absolute;
+  position: absolute;
 }
 </style>
 </head>
@@ -40,7 +65,7 @@ var testSchema ={
       "type": "string",
       "description": "First and Last name",
       "minLength": 4,
-      "default": "Jeremy Dorn"
+      "default": "James Yang"
     },
     "age": {
       "type": "integer",
@@ -67,11 +92,11 @@ var testSchema ={
       "properties": {
         "city": {
           "type": "string",
-          "default": "San Francisco"
+          "default": "SX"
         },
         "state": {
           "type": "string",
-          "default": "CA"
+          "default": "ZJ"
         },
         "citystate": {
           "type": "string",
@@ -124,22 +149,49 @@ var testSchema ={
 }
 
 var testDATA = {
-  "age": 43,
+  "age": 33,
+  "name": "James Yang",
   "favorite_color": "#ffa500",
   "location": {
-    "state": "LA",
-    "citystate": "San Francisco, CA"
+    "state": "ZJ",
+    "citystate": "SX, ZJ"
   },
       "pets": [
         {
-          "type": "dog",
-          "name": "345234"
+          "type": "cat",
+          "name": "Di Gua"
         },
       ]
 
 }
 
-m.render( document.body, new JsonEditor( testSchema, testDATA, +new Date() ) )
+var com={
+  controller:function  () {
+    var ctrl=this
+    this.jsonData = testDATA
+    this.jsonPath = m.prop('')
+    this.jsonValue = m.prop('')
+    this.editor = new mJsonEditor( testSchema, testDATA, +new Date(), function cb(DATA,path,value) {
+      if( path.join('.')=='root.location.citystate' ) return
+      // console.log(DATA, path, value)
+      ctrl.jsonData = DATA
+      ctrl.jsonPath( JSON.stringify(path) )
+      ctrl.jsonValue( value )
+      m.redraw()
+    } )
+  },
+  view:function(ctrl){
+    return m('#container', [
+        m('.left', {key:'left'}, [
+            m('.title', !ctrl.jsonPath()?m.trust('<b>Edit this json in right -></b>'): '-> ' + ctrl.jsonPath()+' : '+ctrl.jsonValue() ),
+            m('textarea', JSON.stringify(ctrl.jsonData,null,2) )
+          ] ),
+        m('.right', {key:'right', config:function(el,old,ctx){ctx.retain=true}}, ctrl.editor),
+      ])
+  }
+}
+
+m.mount( document.body, com )
 
 </script>
 
